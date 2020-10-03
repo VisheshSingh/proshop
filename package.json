@@ -1,0 +1,23 @@
+{
+  "name": "proshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisheshSingh/proshop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VisheshSingh/proshop/issues"
+  },
+  "homepage": "https://github.com/VisheshSingh/proshop#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
