@@ -1,19 +1,25 @@
 import React, { useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { listProducts } from '../actions/productsAction';
 import Product from '../components/Product';
 
-const HomeScreen = ({ isLoading, products, error, listProducts }) => {
+const HomeScreen = () => {
+  const dispatch = useDispatch();
+
+  const { loading, products, error } = useSelector(
+    (state) => state.productsList
+  );
+
   useEffect(() => {
-    listProducts();
-  }, [listProducts]);
+    dispatch(listProducts());
+  }, [dispatch]);
 
   return (
     <div>
       <h1>Latest products</h1>
-      {isLoading ? (
+      {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>{error}</p>
@@ -31,18 +37,4 @@ const HomeScreen = ({ isLoading, products, error, listProducts }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    isLoading: state.productsList.loading,
-    products: state.productsList.products,
-    error: state.productsList.error,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    listProducts: () => dispatch(listProducts()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+export default HomeScreen;
