@@ -3,6 +3,8 @@ import { Row, Col } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { listProducts } from '../actions/productsAction';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
 import Product from '../components/Product';
 
 const HomeScreen = () => {
@@ -20,9 +22,9 @@ const HomeScreen = () => {
     <div>
       <h1>Latest products</h1>
       {loading ? (
-        <p>Loading...</p>
+        <Loader />
       ) : error ? (
-        <p>{error}</p>
+        <Message variant='danger'>{error}</Message>
       ) : (
         <Row>
           {products &&
