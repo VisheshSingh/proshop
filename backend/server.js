@@ -3,12 +3,14 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const colors = require('colors');
 const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
 
 dotenv.config();
 connectDB();
 
 const app = express();
+app.use(express.json()); // Middleware for parsing req.body
 
 app.get('/', (req, res) => {
   res.send(
@@ -17,6 +19,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
 
 app.use(notFound);
 
