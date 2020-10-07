@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
 
 // @desc    Auth User & Create token
 // @route   POST /api/users/login
@@ -15,7 +16,9 @@ const authUser = asyncHandler(async (req, res) => {
       user: user.email,
       email: user.email,
       isAdmin: user.isAdmin,
-      token: null,
+      token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+      }),
     });
   } else {
     res.status(401);
