@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -5,7 +6,7 @@ import {
   USER_LOGOUT,
 } from '../constants/userConstant';
 
-export const userActions = (email, password) => async (dispatch) => {
+export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_LOGIN_REQUEST });
 
