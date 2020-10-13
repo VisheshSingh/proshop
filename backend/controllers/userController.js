@@ -13,7 +13,7 @@ const authUser = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
-      user: user.email,
+      name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
       token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -70,13 +70,42 @@ const getUserProfile = asyncHandler(async (req, res) => {
   if (user) {
     res.json({
       _id: user._id,
-      user: user.email,
+      name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
     });
   } else {
     res.status(401);
-    throw new Error('Invalid user email or password');
+    throw new Error('User not fount');
+  }
+});
+
+// @desc    Update User Profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      token: jwt.sign({ id: updatedUser._id }, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+      }),
+    });
+  } else {
+    res.status(401);
+    throw new Error('User not fount');
   }
 });
 
@@ -84,4 +113,5 @@ module.exports = {
   authUser,
   registerUser,
   getUserProfile,
+  updateUserProfile,
 };
