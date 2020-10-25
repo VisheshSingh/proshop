@@ -6,7 +6,7 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listUsers } from '../actions/userAction';
 
-const UserListScreen = () => {
+const UserListScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const usersList = useSelector((state) => state.usersList);
@@ -18,6 +18,8 @@ const UserListScreen = () => {
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       dispatch(listUsers());
+    } else {
+      history.push('/login');
     }
   }, [dispatch, userInfo]);
 
