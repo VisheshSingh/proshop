@@ -5,9 +5,10 @@ const {
   getProductById,
   deleteProduct,
 } = require('../controllers/productController');
+const { protectRoute, admin } = require('../middlewares/authMiddleware');
 
 router.get('/', getAllProducts);
 router.get('/:id', getProductById);
-router.delete('/:id', deleteProduct);
+router.delete('/:id', protectRoute, admin, deleteProduct);
 
 module.exports = router;
