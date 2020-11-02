@@ -20,7 +20,7 @@ import {
   PRODUCT_CREATE_REVIEW_FAILURE,
 } from '../constants/productsConstants';
 
-export const listProducts = (keyword) => async (dispatch) => {
+export const listProducts = (keyword = '') => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
