@@ -9,6 +9,7 @@ import Product from '../components/Product';
 
 const HomeScreen = ({ match }) => {
   const keyword = match.params.keyword;
+  const pageNumber = match.params.pageNumber || 1;
   const dispatch = useDispatch();
 
   const { loading, products, error } = useSelector(
@@ -16,8 +17,8 @@ const HomeScreen = ({ match }) => {
   );
 
   useEffect(() => {
-    dispatch(listProducts(keyword));
-  }, [dispatch, keyword]);
+    dispatch(listProducts(keyword, pageNumber));
+  }, [dispatch, keyword, pageNumber]);
 
   return (
     <div>
