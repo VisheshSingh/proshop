@@ -29,6 +29,9 @@ const ProductEditScreen = ({ match, history }) => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const productUpdate = useSelector((state) => state.productUpdate);
   const {
     loading: loadingUpdate,
@@ -37,24 +40,28 @@ const ProductEditScreen = ({ match, history }) => {
   } = productUpdate;
 
   useEffect(() => {
-    if (successUpdate) {
-      dispatch({ type: PRODUCT_UPDATE_RESET });
-      dispatch({ type: PRODUCT_DETAILS_RESET });
-      history.push('/admin/productlist');
+    if (!userInfo) {
+      history.push('/login');
     } else {
-      if (!product.name || product._id !== productId) {
-        dispatch(listProductDetails(productId));
+      if (successUpdate) {
+        dispatch({ type: PRODUCT_UPDATE_RESET });
+        dispatch({ type: PRODUCT_DETAILS_RESET });
+        history.push('/admin/productlist');
       } else {
-        setName(product.name);
-        setPrice(product.price);
-        setImage(product.image);
-        setBrand(product.brand);
-        setCategory(product.category);
-        setDescription(product.description);
-        setCountInStock(product.countInStock);
+        if (!product.name || product._id !== productId) {
+          dispatch(listProductDetails(productId));
+        } else {
+          setName(product.name);
+          setPrice(product.price);
+          setImage(product.image);
+          setBrand(product.brand);
+          setCategory(product.category);
+          setDescription(product.description);
+          setCountInStock(product.countInStock);
+        }
       }
     }
-  }, [dispatch, product, productId, history, successUpdate]);
+  }, [dispatch, product, productId, history, successUpdate, userInfo]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];

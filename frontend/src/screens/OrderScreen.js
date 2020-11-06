@@ -16,7 +16,7 @@ import {
   ORDER_DELIVER_RESET,
 } from '../constants/orderConstants';
 
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
   const [sdkReady, setSdkReady] = useState(false);
 
   const orderId = match.params.id;
@@ -41,31 +41,35 @@ const OrderScreen = ({ match }) => {
   }
 
   useEffect(() => {
-    const addPaypalScript = async () => {
-      const { data: clientId } = await axios.get('/api/config/paypal');
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.async = true;
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-      script.onload = () => {
-        setSdkReady(true);
+    if (!userInfo) {
+      history.push('/login');
+    } else {
+      const addPaypalScript = async () => {
+        const { data: clientId } = await axios.get('/api/config/paypal');
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+        script.onload = () => {
+          setSdkReady(true);
+        };
+        document.body.appendChild(script);
       };
-      document.body.appendChild(script);
-    };
 
-    if (!order || order._id !== orderId || successPay || successDeliver) {
-      dispatch({ type: ORDER_PAY_RESET });
-      dispatch({ type: ORDER_DELIVER_RESET });
-      dispatch(getOrderDetailsAction(orderId));
-    } else if (!order.isPaid) {
-      if (!window.paypal) {
-        addPaypalScript();
-      } else {
-        setSdkReady(true);
+      if (!order || order._id !== orderId || successPay || successDeliver) {
+        dispatch({ type: ORDER_PAY_RESET });
+        dispatch({ type: ORDER_DELIVER_RESET });
+        dispatch(getOrderDetailsAction(orderId));
+      } else if (!order.isPaid) {
+        if (!window.paypal) {
+          addPaypalScript();
+        } else {
+          setSdkReady(true);
+        }
       }
     }
     // eslint-disable-next-line
-  }, [dispatch, order, orderId, successPay, successDeliver]);
+  }, [dispatch, order, orderId, successPay, successDeliver, history, userInfo]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
